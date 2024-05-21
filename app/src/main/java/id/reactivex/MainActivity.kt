@@ -16,9 +16,27 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private val oddNumber = IntArray(3)
+    private var firstIndex = 0
+
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        Observable.just("1", "2", "3", "4", "5", "6")
+            .map { string -> string.toInt() }
+            .filter { number -> number % 2 == 1 }
+            .doOnNext {
+                oddNumber[firstIndex] = it
+                firstIndex ++
+                if(oddNumber.isNotEmpty()){
+                    binding.prosesTxt.text = "${oddNumber.joinToString(",")} adalah bilangan ganjil"
+                }
+            }
+            .count()
+            .subscribe { result -> binding.hasilTxt.text = "Total bilangan ganjil : $result" }
+
     }
+
 }
